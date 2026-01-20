@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>おと・タンケン隊！ | 音楽の宝探しに出かけよう</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF6B6B;   /* Energetic Red */
+            --secondary: #4ECDC4; /* Fresh Mint */
+            --accent: #FFE66D;    /* Bright Yellow */
+            --dark: #292F36;      /* Text Color */
+            --light: #F7FFF7;     /* Background Color */
+            --card-bg: #FFFFFF;
+            --onpu-color: #E63946;  /* よりはっきりした信頼感のある赤ピンク */
+            --rhythm-color: #457B9D; /* 落ち着いた知的なブルー */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image: radial-gradient(var(--secondary) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* --- Reliable Character Guide Styles --- */
+        .character-guide {
+            display: flex;
+            align-items: flex-start;
+            background: white;
+            padding: 25px;
+            border-radius: 40px;
+            border: 4px solid var(--accent);
+            margin-bottom: 40px;
+            gap: 25px;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .char-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .char-icon-large {
+            font-size: 3.5rem;
+            line-height: 1;
+            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1));
+        }
+
+        .char-badge {
+            background: var(--dark);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .speech-content {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--card-bg);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--accent);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #FFA07A);
+            color: white;
+            padding: 8rem 2rem;
+            text-align: center;
+            border-bottom-left-radius: 50% 50px;
+            border-bottom-right-radius: 50% 50px;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 700;
+        }
+
+        .hero-team {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        .team-member:nth-child(2) { animation-delay: 0.5s; }
+
+        .team-visual {
+            font-size: 6rem;
+            margin-bottom: 15px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+
+        /* --- Content Container --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            color: var(--secondary);
+            margin-bottom: 4rem;
+            font-weight: 800;
+        }
+
+        .section-title span {
+            border-bottom: 10px solid var(--accent);
+            padding-bottom: 5px;
+        }
+
+        /* --- Large Featured Music Section --- */
+        .big-featured-card {
+            background: white;
+            border-radius: 40px;
+            padding: 4rem;
+            box-shadow: 0 15px 0 rgba(0,0,0,0.05);
+            margin-bottom: 6rem;
+            border: 5px solid var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .big-featured-card::before {
+            content: "RECOMMEND";
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 10px 50px;
+            font-weight: 900;
+            transform: rotate(-30deg);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .featured-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .featured-visual-area {
+            background: #f0f0f0;
+            border-radius: 30px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            color: var(--secondary);
+            border: 5px dashed #e0e0e0;
+            position: relative;
+        }
+
+        .featured-visual-area::after {
+            content: "Now Playing...";
+            position: absolute;
+            bottom: 20px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #bbb;
+        }
+
+        .featured-text-area h2 {
+            font-size: 3rem;
+            margin: 0 0 20px 0;
+            line-height: 1.2;
+            color: var(--dark);
+        }
+
+        .featured-description {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .music-tags {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tag-pill {
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        /* --- Genre Cards --- */
+        .genre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        .genre-card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.05);
+            transition: 0.4s;
+            border: 5px solid transparent;
+        }
+
+        .genre-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--secondary);
+        }
+
+        .card-header {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .pop { background: #FF9F1C; }
+        .rock { background: #2EC4B6; }
+        .jazz { background: #E71D36; }
+        .classical { background: #7209B7; }
+
+        /* --- Request Form Section --- */
+        .request-section {
+            background-color: var(--accent);
+            border-radius: 50px;
+            padding: 5rem 2rem;
+            text-align: center;
+            margin-bottom: 7rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 20px;
+            border: 5px solid white;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 25px 80px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #D64545;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 0 #D64545;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center; justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 5rem 3rem;
+            border-radius: 50px;
+            text-align: center;
+            width: 90%; max-width: 600px;
+        }
+
+        @media (max-width: 992px) {
+            .featured-layout { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+            .music-tags { justify-content: center; }
+            .big-featured-card { padding: 3rem 2rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+
+        /* Apply reliable colors to badges */
+        .char-badge-onpu { background: var(--onpu-color) !important; }
+        .char-badge-rhythm { background: var(--rhythm-color) !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <i class="fa-solid fa-music"></i>
+            おと・タンケン隊！
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#featured">今週の曲</a></li>
+                <li><a href="#genres">ずかん</a></li>
+                <li><a href="#request">リクエスト</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>音楽の宝探しに出発だ！</h1>
+            <p>世界中にある「まだ知らない音」をタンケンしよう！<br>
+            頼れるリーダー、おんぷ君とリズムちゃんがナビゲートするよ！</p>
+            
+            <div class="hero-team">
+                <div class="team-member">
+                    <div class="team-visual">👨‍🎤</div>
+                    <div class="char-badge char-badge-onpu">リーダー / おんぷ君</div>
+                </div>
+                <div class="team-member">
+                    <div class="team-visual">👩‍🎤</div>
+                    <div class="char-badge char-badge-rhythm">ガイド / リズムちゃん</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <section id="featured">
+            <div class="section-title"><span>今週のイチオシ！</span></div>
+
+            <!-- Onpu-kun Character Guide -->
+            <div class="character-guide" style="border-color: var(--onpu-color);">
+                <div class="char-visual">
+                    <div class="char-icon-large">👨‍🎤</div>
+                    <div class="char-badge char-badge-onpu">おんぷ君</div>
+                </div>
+                <div class="speech-content">
+                    <p>「やぁ、タンケン隊のみんな！リーダーのおんぷ君だ。今週は特別に『80年代シンセポップ』を大特集するよ！今のヒット曲にもつながる、キラキラした音の歴史を一緒に体験しよう！」</p>
+                </div>
+            </div>
+
+            <!-- Large Featured Card -->
+            <div class="big-featured-card">
+                <div class="featured-layout">
+                    <div class="featured-visual-area">
+                        <i class="fa-solid fa-radio"></i>
+                    </div>
+                    <div class="featured-text-area">
+                        <div class="music-tags">
+                            <span class="tag-pill">シンセポップ</span>
+                            <span class="tag-pill" style="background: var(--secondary);">ダンス</span>
+                        </div>
+                        <h2>キラキラ・レトロフューチャー！</h2>
+                        <div class="featured-description">
+                            昔のパソコンやゲームのような「ピコピコ音」を、オシャレな音楽に大変身させたのがシンセポップ。未来の音を目指した当時のミュージシャンたちの、ワクワクがつまったジャンルなんだ！
+                        </div>
+                        <p style="font-weight: 800; color: var(--primary);">
+                            <i class="fa-solid fa-circle-play"></i> 下のボタンから詳しくチェック！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="genres">
+            <div class="section-title"><span>音楽ずかん</span></div>
+
+            <!-- Rhythm-chan Character Guide -->
+            <div class="character-guide" style="border-color: var(--rhythm-color);">
+                <div class="char-visual">
+                    <div class="char-icon-large">👩‍🎤</div>
+                    <div class="char-badge char-badge-rhythm">リズムちゃん</div>
+                </div>
+                <div class="speech-content">
+                    <p>「こんにちは！ガイドのリズムよ。音楽にはたくさんの『ジャンル』という名前があるの。それぞれの特徴を知れば、あなたの『一生モノの曲』に出会える確率がグンと上がるわ！」</p>
+                </div>
+            </div>
+
+            <div class="genre-grid">
+                <div class="genre-card">
+                    <div class="card-header pop">🎤</div>
+                    <div class="card-body">
+                        <h3>J-POP</h3>
+                        <p>日本のポップス！耳に残るメロディと、心にひびく歌詞が魅力的な、みんなの音楽よ。</p>
+                    </div>
+                </div>
+                <div class="genre-card">
+                    <div class="card-header rock">🎸</div>
+                    <div class="card-body">
+                        <h3>Rock</h3>
+                        <p>エレキギターの叫び！強いリズムに合わせて、思いっきりエネルギーをぶつける音楽よ！</p>
+                    </div>
+                </div>
+                <div class="genre-card">
+                    <div class="card-header jazz">🎷</div>
+                    <div class="card-body">
+                        <h3>Jazz</h3>
+                        <p>即興演奏のドキドキ感。ゆったりしたリズムの中で、楽器同士がおしゃべりしているみたい！</p>
+                    </div>
+                </div>
+                <div class="genre-card">
+                    <div class="card-header classical">🎻</div>
+                    <div class="card-body">
+                        <h3>Classic</h3>
+                        <p>何百年も愛される芸術。大きなオーケストラが奏でる物語を、耳で楽しんでみて。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="request" class="request-section">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">📬</div>
+            <h2>みんなのリクエストを待ってるよ！</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 3rem;">「こんな曲が聴きたい！」「このジャンルをもっと知りたい！」<br>みんなの好奇心を、僕たちリーダーに届けてね！</p>
+            
+            <form onsubmit="handleRequest(event)" style="max-width: 700px; margin: 0 auto;">
+                <input type="text" class="form-control" placeholder="君のニックネーム" required>
+                <input type="text" class="form-control" placeholder="探してほしい曲やジャンル" required>
+                <textarea class="form-control" rows="4" placeholder="おんぷ君とリズムちゃんへのメッセージ"></textarea>
+                <button type="submit" class="submit-btn">リクエストを送る！</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <div style="font-size: 4rem; margin-bottom: 2rem;">👨‍🎤🎧👩‍🎤</div>
+        <p style="font-size: 1.5rem; font-weight: 800;">おと・タンケン隊！</p>
+        <p>&copy; 2024 Music Discovery Project</p>
+        <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 20px;">
+            このサイトは音楽への好奇心を応援する、安全で健康的なプロジェクトです。
+        </p>
+    </footer>
+
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 6rem; margin-bottom: 2rem;">✨🎉✨</div>
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">リクエストを受け付けたよ！</h3>
+            <p style="font-size: 1.2rem;">ありがとう！みんなからのメッセージ、しっかり読ませてもらうね。<br>次回の更新を楽しみに待っていてくれ！</p>
+            <button class="submit-btn" style="margin-top: 30px; font-size: 1.2rem; padding: 15px 40px;" onclick="closeModal()">OK、わかった！</button>
+        </div>
+    </div>
+
+    <script>
+        // Form Handling
+        function handleRequest(event) {
+            event.preventDefault();
+            document.getElementById('thankYouModal').style.display = 'flex';
+            event.target.reset();
+        }
+
+        // Modal Handling
+        function closeModal() {
+            document.getElementById('thankYouModal').style.display = 'none';
+        }
+
+        // Close Modal on Background Click
+        window.onclick = function(event) {
+            const modal = document.getElementById('thankYouModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
