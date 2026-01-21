@@ -16,8 +16,6 @@
             --dark: #292F36;
             --light: #F7FFF7;
             --card-bg: #FFFFFF;
-            --onpu-color: #E63946;
-            --rhythm-color: #457B9D;
         }
 
         * { box-sizing: border-box; }
@@ -56,8 +54,14 @@
         }
 
         nav ul { display: flex; list-style: none; gap: 20px; margin: 0; padding: 0; }
-        nav a { text-decoration: none; color: var(--dark); font-weight: 700; padding: 10px 20px; border-radius: 25px; transition: 0.3s; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 700; padding: 10px 20px; border-radius: 25px; transition: 0.3s; cursor: pointer; }
         nav a:hover { background-color: var(--accent); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
+
+        /* セクション切り替え */
+        .page-section { display: none; padding: 4rem 0; }
+        .page-section.active { display: block; }
 
         .hero {
             background: linear-gradient(135deg, var(--primary), #FFA07A);
@@ -66,16 +70,10 @@
             text-align: center;
             border-bottom-left-radius: 50% 50px;
             border-bottom-right-radius: 50% 50px;
-            margin-bottom: 5rem;
+            margin-bottom: 2rem;
         }
 
-        .hero h1 { font-size: 3rem; margin-bottom: 1.5rem; text-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
-
-        .section-title { text-align: center; font-size: 2.5rem; color: var(--secondary); margin-bottom: 3rem; }
-
-        .request-section {
+        .request-section, .admin-section {
             background-color: var(--accent);
             border-radius: 50px;
             padding: 4rem 2rem;
@@ -108,7 +106,22 @@
         }
 
         .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 11px 0 #D64545; }
-        .submit-btn:disabled { background-color: #ccc; box-shadow: none; cursor: not-allowed; }
+
+        /* 管理者用リスト */
+        .request-list {
+            text-align: left;
+            margin-top: 2rem;
+            display: grid;
+            gap: 1rem;
+        }
+        .request-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
+        }
+        .request-item h4 { margin: 0 0 0.5rem 0; color: var(--primary); }
+        .request-item .date { font-size: 0.8rem; color: #888; }
 
         .modal-overlay {
             display: none;
@@ -133,33 +146,60 @@
 <body>
 
     <header>
-        <a href="#" class="logo"><i class="fa-solid fa-music"></i> おと・タンケン隊！</a>
+        <a href="#" class="logo" onclick="showPage('user')"><i class="fa-solid fa-music"></i> おと・タンケン隊！</a>
         <nav>
             <ul>
-                <li><a href="#request">リクエスト</a></li>
+                <li><a onclick="showPage('user')">リクエスト送る</a></li>
+                <li><a onclick="showPage('admin')" style="background: #eee;">開発者用</a></li>
             </ul>
         </nav>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>リクエスト送信所</h1>
-            <p>君が送ったメッセージは、リーダーのところに届くよ！</p>
-        </div>
-    </section>
-
-    <main class="container">
-        <section id="request" class="request-section">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">📬</div>
-            <h2>みんなのリクエストを待ってるよ！</h2>
-            <form id="requestForm" style="max-width: 600px; margin: 0 auto;">
-                <input type="text" id="userName" class="form-control" placeholder="君のニックネーム" required>
-                <input type="text" id="requestTopic" class="form-control" placeholder="探してほしい曲やジャンル" required>
-                <textarea id="userMessage" class="form-control" rows="4" placeholder="おんぷ君とリズムちゃんへのメッセージ"></textarea>
-                <button type="submit" id="submitBtn" class="submit-btn">リクエストを送る！</button>
-            </form>
+    <!-- ユーザー用ページ -->
+    <div id="userPage" class="page-section active">
+        <section class="hero">
+            <div class="container">
+                <h1>音楽の宝探しに出発だ！</h1>
+                <p>君が送ったメッセージは、リーダーのところに届くよ！</p>
+            </div>
         </section>
-    </main>
+
+        <main class="container">
+            <section id="request" class="request-section">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📬</div>
+                <h2>みんなのリクエストを待ってるよ！</h2>
+                <form id="requestForm" style="max-width: 600px; margin: 0 auto;">
+                    <input type="text" id="userName" class="form-control" placeholder="君のニックネーム" required>
+                    <input type="text" id="requestTopic" class="form-control" placeholder="探してほしい曲やジャンル" required>
+                    <textarea id="userMessage" class="form-control" rows="4" placeholder="メッセージ"></textarea>
+                    <button type="submit" id="submitBtn" class="submit-btn">リクエストを送る！</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- 開発者用ページ -->
+    <div id="adminPage" class="page-section">
+        <div class="container">
+            <section class="admin-section">
+                <h2>開発者専用エリア</h2>
+                
+                <div id="loginArea">
+                    <p>パスワードを入力してね</p>
+                    <input type="password" id="adminPass" class="form-control" style="max-width: 300px; margin: 0 auto 1rem;" placeholder="パスワード">
+                    <br>
+                    <button onclick="checkAdminPass()" class="submit-btn" style="font-size: 1.1rem; padding: 15px 40px;">認証</button>
+                </div>
+
+                <div id="dataArea" style="display: none;">
+                    <h3>届いているリクエスト一覧</h3>
+                    <div id="requestList" class="request-list">
+                        <p>読み込み中...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2024 Music Discovery Project</p>
@@ -174,13 +214,11 @@
         </div>
     </div>
 
-    <!-- Firebase SDK の読み込み -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebaseの設定 (環境から自動的に読み込まれます) ---
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -189,7 +227,7 @@
 
         let currentUser = null;
 
-        // ログイン処理 (ルールに従い匿名またはカスタムトークンでログイン)
+        // ログイン
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -197,66 +235,101 @@
                 } else {
                     await signInAnonymously(auth);
                 }
-            } catch (error) {
-                console.error("Auth error:", error);
-            }
+            } catch (e) { console.error(e); }
         };
         initAuth();
 
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-        });
+        onAuthStateChanged(auth, (user) => { currentUser = user; });
 
-        // フォーム送信時の処理
+        // ページ切り替え
+        window.showPage = (page) => {
+            document.getElementById('userPage').classList.remove('active');
+            document.getElementById('adminPage').classList.remove('active');
+            if(page === 'admin') document.getElementById('adminPage').classList.add('active');
+            else document.getElementById('userPage').classList.add('active');
+        };
+
+        // パスワード確認
+        window.checkAdminPass = () => {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === "takakita") {
+                document.getElementById('loginArea').style.display = 'none';
+                document.getElementById('dataArea').style.display = 'block';
+                startListeningRequests();
+            } else {
+                alert("パスワードがちがうよ！");
+            }
+        };
+
+        // フォーム送信
         const form = document.getElementById('requestForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const modal = document.getElementById('thankYouModal');
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUser) return;
 
-            if (!currentUser) {
-                alert("ログインの準備ができていないよ。少し待ってからもう一度試してね。");
-                return;
-            }
-
-            // モダルを表示
             showModal("⌛", "送信中...", "データを送っているよ。");
-            submitBtn.disabled = true;
-
-            const requestData = {
+            
+            const data = {
                 name: document.getElementById('userName').value,
                 topic: document.getElementById('requestTopic').value,
                 message: document.getElementById('userMessage').value,
-                timestamp: serverTimestamp(),
-                userId: currentUser.uid
+                timestamp: serverTimestamp()
             };
 
             try {
-                // RULE 1 に従い、特定のパスに保存
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'requests');
-                await addDoc(colRef, requestData);
-
-                showModal("✨🎉✨", "リクエストを受け付けたよ！", "ありがとう！リーダーがしっかり読ませてもらうね。");
+                await addDoc(colRef, data);
+                showModal("✨🎉✨", "リクエストを受け付けたよ！", "リーダーがしっかり読ませてもらうね。");
                 form.reset();
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                showModal("❌", "エラーが起きたよ", "うまく送れなかったみたい。もう一度試してみてね。");
-            } finally {
-                submitBtn.disabled = false;
+            } catch (err) {
+                showModal("❌", "エラー", "うまく送れなかったよ。");
             }
         });
 
-        // モダル表示用関数
+        // データのリアルタイム読み込み
+        function startListeningRequests() {
+            if (!currentUser) return;
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'requests');
+            
+            onSnapshot(colRef, (snapshot) => {
+                const listDiv = document.getElementById('requestList');
+                listDiv.innerHTML = '';
+                
+                // 届いたデータを新しい順に並べ替え（JS側で処理）
+                const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                if(docs.length === 0) {
+                    listDiv.innerHTML = '<p>まだリクエストはないよ。</p>';
+                    return;
+                }
+
+                docs.forEach(data => {
+                    const item = document.createElement('div');
+                    item.className = 'request-item';
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : '送信中...';
+                    item.innerHTML = `
+                        <div class="date">${date}</div>
+                        <h4>${data.name} くん/ちゃん</h4>
+                        <p><strong>テーマ:</strong> ${data.topic}</p>
+                        <p>${data.message}</p>
+                    `;
+                    listDiv.appendChild(item);
+                });
+            }, (error) => {
+                console.error("Listen failed:", error);
+            });
+        }
+
         function showModal(icon, title, message) {
             document.getElementById('modalIcon').innerText = icon;
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = message;
-            modal.style.display = 'flex';
+            document.getElementById('thankYouModal').style.display = 'flex';
         }
 
         window.closeModal = () => {
-            modal.style.display = 'none';
+            document.getElementById('thankYouModal').style.display = 'none';
         };
     </script>
 </body>
