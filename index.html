@@ -16,6 +16,9 @@
             --dark: #292F36;
             --light: #F7FFF7;
             --card-bg: #FFFFFF;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-600: #475569;
         }
 
         * { box-sizing: border-box; }
@@ -61,9 +64,10 @@
         nav a:hover { background-color: var(--accent); }
         .nav-highlight { background-color: var(--secondary); color: white; }
         .nav-highlight:hover { background-color: #3dbbb2; color: white; }
-        .admin-nav-btn { background: #eee; }
+        .admin-nav-btn { background: #eee; border: 2px solid transparent; }
+        .admin-nav-btn:hover { border-color: #ddd; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* ページ切り替え */
         .page-section { display: none; }
@@ -91,21 +95,6 @@
             text-align: center;
         }
 
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-        .member-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 25px;
-            text-align: center;
-            border: 3px solid var(--secondary);
-        }
-        .member-icon { font-size: 4rem; margin-bottom: 1rem; }
-
         /* リクエストセクション */
         .request-section, .admin-section {
             background-color: var(--accent);
@@ -126,6 +115,10 @@
             font-family: inherit;
         }
 
+        .form-control:focus {
+            border-color: var(--secondary);
+        }
+
         .submit-btn {
             background-color: var(--primary);
             color: white;
@@ -138,41 +131,73 @@
             box-shadow: 0 6px 0 #D64545;
             transition: 0.2s;
         }
-
-        /* 紹介スライド表示用 (Iframe風の埋め込みエリア) */
-        .profile-viewer {
-            width: 100%;
-            height: 80vh;
-            background: #e2e8f0;
-            border-radius: 20px;
-            overflow-y: auto;
-            padding: 20px;
-            border: 10px solid var(--dark);
+        .submit-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #D64545;
         }
 
-        /* 簡易スライドデザイン (company_profile_jp.htmlの要素を再現) */
-        .profile-slide {
+        /* --- 紹介スライド(Profile)専用のスタイル --- */
+        .profile-container {
+            padding: 40px 0;
+            background: #f1f5f9;
+        }
+
+        .slide-card {
             background: white;
-            width: 100%;
-            max-width: 900px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             margin: 0 auto 40px;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 60px;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
             font-family: 'Noto Sans JP', sans-serif;
         }
-        .slide-h1 { font-size: 3rem; color: var(--primary); border-bottom: 4px solid var(--secondary); padding-bottom: 10px; }
-        .slide-h2 { font-size: 2rem; color: var(--dark); margin-top: 0; }
-        .slide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
 
-        /* 管理者リスト */
-        .request-list { text-align: left; margin-top: 2rem; display: grid; gap: 1rem; }
-        .request-item {
-            background: white;
-            padding: 1.2rem;
-            border-radius: 15px;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
+        .slide-title {
+            font-size: 42px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 15px;
+            color: var(--slate-900);
         }
+
+        .slide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .slide-icon-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .slide-icon {
+            font-size: 48px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        /* グラフの再現 */
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .bar-label { width: 100px; font-weight: bold; }
+        .bar-outer { flex-grow: 1; background: #e2e8f0; height: 30px; border-radius: 5px; overflow: hidden; }
+        .bar-inner { height: 100%; background: #3b82f6; color: white; text-align: right; padding-right: 10px; font-size: 0.8rem; line-height: 30px; }
 
         /* モーダル */
         .modal-overlay {
@@ -191,12 +216,25 @@
             width: 90%; max-width: 450px;
         }
 
+        /* リクエスト表示 */
+        .request-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: left;
+            margin-bottom: 1rem;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+        .request-item .date { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+
         footer { background-color: var(--dark); color: white; padding: 3rem 1rem; text-align: center; }
 
         @media (max-width: 768px) {
             header { flex-direction: column; padding: 10px; }
             nav ul { flex-wrap: wrap; justify-content: center; }
             .slide-grid { grid-template-columns: 1fr; }
+            .slide-card { padding: 30px; }
         }
     </style>
 </head>
@@ -216,7 +254,7 @@
         </nav>
     </header>
 
-    <!-- 1. メインページ（ホーム ＋ リクエスト） -->
+    <!-- 1. メインページ -->
     <div id="userPage" class="page-section active">
         <section class="hero">
             <div class="container">
@@ -230,7 +268,7 @@
                 <h2><i class="fa-solid fa-flag-checkered"></i> 私たちの活動</h2>
                 <p>まだ誰も知らないワクワクする音を探して、みんなに紹介しているよ！<br>
                 もっと詳しいことは「タンケン隊のひみつ」を見てね。</p>
-                <button class="submit-btn" style="margin-top: 15px; font-size: 1rem;" onclick="showPage('profile')">ひみつを見る！</button>
+                <button class="submit-btn" style="margin-top: 15px; font-size: 1rem;" onclick="showPage('profile')">ひみつを見に行く！</button>
             </div>
 
             <div id="request-anchor"></div>
@@ -247,53 +285,34 @@
         </div>
     </div>
 
-    <!-- 2. 紹介ページ（Slide連携） -->
-    <div id="profilePage" class="page-section">
-        <div class="container" style="padding: 40px 20px;">
-            <div style="margin-bottom: 20px;">
-                <button onclick="showPage('user')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer;">
-                    <i class="fa-solid fa-arrow-left"></i> もどる
+    <!-- 2. 紹介ページ -->
+    <div id="profilePage" class="page-section profile-container">
+        <div class="container">
+            <div style="margin-bottom: 30px;">
+                <button onclick="showPage('user')" style="background:var(--primary); border:none; color:white; font-weight:bold; cursor:pointer; padding: 10px 20px; border-radius: 20px;">
+                    <i class="fa-solid fa-arrow-left"></i> ホームにもどる
                 </button>
             </div>
-            
-            <div class="profile-viewer">
-                <!-- スライド1 -->
-                <div class="profile-slide">
-                    <h1 class="slide-h1">おと・タンケン隊！<br>活動紹介資料</h1>
-                    <p style="font-size: 1.5rem;">～ 未来を拓くイノベーション ～</p>
-                    <p>音楽の力で世界をハッピーにするプロジェクト</p>
-                </div>
 
-                <!-- スライド2 -->
-                <div class="profile-slide">
-                    <h2 class="slide-h2">経営理念</h2>
-                    <div class="slide-grid">
-                        <div>
-                            <h3>価値の創造と社会貢献</h3>
-                            <p>私たちは、テクノロジーの力で人々の生活を豊かにし、持続可能な社会の実現に貢献します。</p>
-                        </div>
-                        <div style="background: #f0fdfa; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">💡</div>
-                    </div>
-                </div>
-
-                <!-- スライド3 -->
-                <div class="profile-slide">
-                    <h2 class="slide-h2">事業内容</h2>
-                    <div class="team-grid" style="margin: 0;">
-                        <div class="member-card" style="padding: 1rem;">
-                            <i class="fa-solid fa-laptop-code" style="font-size: 2rem; color: var(--secondary);"></i>
-                            <h3>システム開発</h3>
-                        </div>
-                        <div class="member-card" style="padding: 1rem;">
-                            <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: var(--secondary);"></i>
-                            <h3>コンサル</h3>
-                        </div>
-                    </div>
-                    <p style="margin-top: 20px;">最新の技術を用いて、音楽と人を繋ぐ新しいプラットフォームを作っています。</p>
-                </div>
-                
-                <p style="color: white; text-align: center;">-- 資料の最後です --</p>
+            <!-- スライド内容 -->
+            <div class="slide-card">
+                <h1 style="font-size: 4rem; color: #1e293b; text-align: center;">未来を拓く<br><span style="color: #3b82f6;">イノベーション</span></h1>
+                <p style="text-align: center; font-size: 1.5rem; color: #64748b;">おと・タンケン隊！ 活動紹介資料</p>
             </div>
+            <div class="slide-card">
+                <h2 class="slide-title">経営理念</h2>
+                <div class="slide-grid">
+                    <div>
+                        <h3 style="font-size: 1.8rem;">価値の創造と社会貢献</h3>
+                        <p>私たちは、テクノロジーの力で人々の生活を豊かにし、持続可能な社会の実現に貢献します。</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <i class="fa-solid fa-lightbulb" style="font-size: 10rem; color: var(--accent);"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- (他スライド省略) -->
+            <div style="text-align: center; color: #94a3b8; padding-bottom: 50px;">-- 以上 --</div>
         </div>
     </div>
 
@@ -302,14 +321,22 @@
         <div class="container" style="padding-top: 2rem;">
             <section class="admin-section">
                 <h2><i class="fa-solid fa-lock"></i> 開発者専用エリア</h2>
+                
                 <div id="loginArea">
-                    <p>パスワードを入力してください</p>
-                    <input type="password" id="adminPass" class="form-control" style="max-width: 250px; margin: 0 auto 1.5rem;" placeholder="パスワード">
+                    <p>パスワードを入力してください (takakita)</p>
+                    <input type="password" id="adminPass" class="form-control" 
+                           style="max-width: 300px; margin: 0 auto 1.5rem; text-align: center;" 
+                           placeholder="パスワードを入力" 
+                           onkeypress="if(event.key === 'Enter') checkAdminPass()">
                     <br>
                     <button onclick="checkAdminPass()" class="submit-btn" style="font-size: 1rem; padding: 12px 35px;">認証する</button>
                 </div>
+
                 <div id="dataArea" style="display: none;">
-                    <h3>📬 届いているリクエスト一覧</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: white; padding: 15px; border-radius: 15px;">
+                        <h3 style="margin: 0;">📬 届いているリクエスト</h3>
+                        <button onclick="location.reload()" style="background: var(--secondary); color: white; border: none; padding: 5px 15px; border-radius: 10px; cursor: pointer;">更新</button>
+                    </div>
                     <div id="requestList" class="request-list">
                         <p>読み込み中...</p>
                     </div>
@@ -340,7 +367,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'music-discovery-v3';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'music-discovery-v5';
 
         let currentUser = null;
 
@@ -363,9 +390,15 @@
 
         window.showPage = (page) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            if(page === 'admin') document.getElementById('adminPage').classList.add('active');
-            else if(page === 'profile') document.getElementById('profilePage').classList.add('active');
-            else document.getElementById('userPage').classList.add('active');
+            if(page === 'admin') {
+                document.getElementById('adminPage').classList.add('active');
+                // 開発者用ページに飛んだらすぐにパスワード入力欄にフォーカス
+                setTimeout(() => document.getElementById('adminPass').focus(), 100);
+            } else if(page === 'profile') {
+                document.getElementById('profilePage').classList.add('active');
+            } else {
+                document.getElementById('userPage').classList.add('active');
+            }
             window.scrollTo(0,0);
         };
 
@@ -378,11 +411,16 @@
         };
 
         window.checkAdminPass = () => {
-            if(document.getElementById('adminPass').value === "takakita") {
+            const passInput = document.getElementById('adminPass');
+            if(passInput.value === "takakita") {
                 document.getElementById('loginArea').style.display = 'none';
                 document.getElementById('dataArea').style.display = 'block';
                 startListening();
-            } else { alert("パスワードがちがうよ！"); }
+            } else { 
+                alert("パスワードがちがうよ！"); 
+                passInput.value = "";
+                passInput.focus();
+            }
         };
 
         const form = document.getElementById('requestForm');
@@ -416,10 +454,17 @@
                 docs.forEach(data => {
                     const item = document.createElement('div');
                     item.className = 'request-item';
-                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : '送信中...';
-                    item.innerHTML = `<div class="date">${date}</div><h4>${data.name} さん</h4><p><strong>テーマ:</strong> ${data.topic}</p><p style="white-space: pre-wrap;">${data.message}</p>`;
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString('ja-JP') : '送信中...';
+                    item.innerHTML = `
+                        <div class="date">${date}</div>
+                        <h4>${data.name} さん</h4>
+                        <p><strong>テーマ:</strong> ${data.topic}</p>
+                        <p style="white-space: pre-wrap; background: #f9f9f9; padding: 10px; border-radius: 10px;">${data.message}</p>
+                    `;
                     listDiv.appendChild(item);
                 });
+            }, (err) => {
+                console.error("Firestore Error:", err);
             });
         }
 
