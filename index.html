@@ -6,7 +6,7 @@
     <title>おと・タンケン隊！ | 音楽の宝探しに出かけよう</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -56,9 +56,11 @@
             cursor: pointer;
         }
 
-        nav ul { display: flex; list-style: none; gap: 15px; margin: 0; padding: 0; align-items: center; }
-        nav a { text-decoration: none; color: var(--dark); font-weight: 700; padding: 8px 15px; border-radius: 20px; transition: 0.3s; cursor: pointer; font-size: 0.9rem; }
+        nav ul { display: flex; list-style: none; gap: 10px; margin: 0; padding: 0; align-items: center; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 700; padding: 8px 12px; border-radius: 20px; transition: 0.3s; cursor: pointer; font-size: 0.85rem; }
         nav a:hover { background-color: var(--accent); }
+        .nav-highlight { background-color: var(--secondary); color: white; }
+        .nav-highlight:hover { background-color: #3dbbb2; color: white; }
         .admin-nav-btn { background: #eee; }
 
         .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
@@ -79,7 +81,7 @@
         }
         .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 3px 3px 0 rgba(0,0,0,0.1); }
 
-        /* 紹介コンテンツのスタイル */
+        /* 紹介カード */
         .info-card {
             background: white;
             padding: 2.5rem;
@@ -100,13 +102,11 @@
             padding: 2rem;
             border-radius: 25px;
             text-align: center;
-            transition: 0.3s;
             border: 3px solid var(--secondary);
         }
-        .member-card:hover { transform: translateY(-10px); }
         .member-icon { font-size: 4rem; margin-bottom: 1rem; }
 
-        /* フォームのスタイル */
+        /* リクエストセクション */
         .request-section, .admin-section {
             background-color: var(--accent);
             border-radius: 40px;
@@ -138,9 +138,34 @@
             box-shadow: 0 6px 0 #D64545;
             transition: 0.2s;
         }
-        .submit-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #D64545; }
 
-        /* 管理者用リスト */
+        /* 紹介スライド表示用 (Iframe風の埋め込みエリア) */
+        .profile-viewer {
+            width: 100%;
+            height: 80vh;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 20px;
+            border: 10px solid var(--dark);
+        }
+
+        /* 簡易スライドデザイン (company_profile_jp.htmlの要素を再現) */
+        .profile-slide {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .slide-h1 { font-size: 3rem; color: var(--primary); border-bottom: 4px solid var(--secondary); padding-bottom: 10px; }
+        .slide-h2 { font-size: 2rem; color: var(--dark); margin-top: 0; }
+        .slide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+
+        /* 管理者リスト */
         .request-list { text-align: left; margin-top: 2rem; display: grid; gap: 1rem; }
         .request-item {
             background: white;
@@ -148,8 +173,6 @@
             border-radius: 15px;
             box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
         }
-        .request-item h4 { margin: 0 0 0.3rem 0; color: var(--primary); }
-        .request-item .date { font-size: 0.75rem; color: #888; margin-bottom: 0.5rem; }
 
         /* モーダル */
         .modal-overlay {
@@ -168,11 +191,12 @@
             width: 90%; max-width: 450px;
         }
 
-        footer { background-color: var(--dark); color: white; padding: 3rem 1rem; text-align: center; margin-top: 4rem; }
+        footer { background-color: var(--dark); color: white; padding: 3rem 1rem; text-align: center; }
 
-        @media (max-width: 600px) {
-            header { flex-direction: column; gap: 10px; }
-            .hero h1 { font-size: 1.8rem; }
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 10px; }
+            nav ul { flex-wrap: wrap; justify-content: center; }
+            .slide-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -185,13 +209,14 @@
         <nav>
             <ul>
                 <li><a onclick="showPage('user')">ホーム</a></li>
+                <li><a onclick="showPage('profile')" class="nav-highlight">タンケン隊のひみつ</a></li>
                 <li><a onclick="scrollToSection('request-anchor')">リクエスト</a></li>
                 <li><a onclick="showPage('admin')" class="admin-nav-btn">開発者用</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- メインページ（紹介 ＋ リクエスト） -->
+    <!-- 1. メインページ（ホーム ＋ リクエスト） -->
     <div id="userPage" class="page-section active">
         <section class="hero">
             <div class="container">
@@ -201,31 +226,17 @@
         </section>
 
         <div class="container">
-            <!-- 紹介セクション -->
             <div class="info-card">
-                <h2><i class="fa-solid fa-flag-checkered"></i> タンケン隊のミッション</h2>
-                <p>私たちは、みんながまだ知らない「ワクワクする音」や「心がおどるメロディ」を探検して、みんなに届ける活動をしています！</p>
+                <h2><i class="fa-solid fa-flag-checkered"></i> 私たちの活動</h2>
+                <p>まだ誰も知らないワクワクする音を探して、みんなに紹介しているよ！<br>
+                もっと詳しいことは「タンケン隊のひみつ」を見てね。</p>
+                <button class="submit-btn" style="margin-top: 15px; font-size: 1rem;" onclick="showPage('profile')">ひみつを見る！</button>
             </div>
 
-            <div class="team-grid">
-                <div class="member-card">
-                    <div class="member-icon">🎵</div>
-                    <h3>おんぷ君</h3>
-                    <p>メロディを探す天才！<br>どんな小さな音も見逃さないよ。</p>
-                </div>
-                <div class="member-card">
-                    <div class="member-icon">🥁</div>
-                    <h3>リズムちゃん</h3>
-                    <p>楽しいリズムが大好き！<br>みんなを笑顔にするビートを刻むよ。</p>
-                </div>
-            </div>
-
-            <!-- リクエストフォームセクション -->
             <div id="request-anchor"></div>
             <section id="request" class="request-section">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">📬</div>
                 <h2>リクエストを募集中！</h2>
-                <p>探してほしい曲のイメージや、メッセージを送ってね。</p>
                 <form id="requestForm" style="max-width: 500px; margin: 2rem auto 0;">
                     <input type="text" id="userName" class="form-control" placeholder="君のニックネーム" required>
                     <input type="text" id="requestTopic" class="form-control" placeholder="どんな曲・ジャンルを探してほしい？" required>
@@ -236,19 +247,67 @@
         </div>
     </div>
 
-    <!-- 開発者用ページ -->
+    <!-- 2. 紹介ページ（Slide連携） -->
+    <div id="profilePage" class="page-section">
+        <div class="container" style="padding: 40px 20px;">
+            <div style="margin-bottom: 20px;">
+                <button onclick="showPage('user')" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer;">
+                    <i class="fa-solid fa-arrow-left"></i> もどる
+                </button>
+            </div>
+            
+            <div class="profile-viewer">
+                <!-- スライド1 -->
+                <div class="profile-slide">
+                    <h1 class="slide-h1">おと・タンケン隊！<br>活動紹介資料</h1>
+                    <p style="font-size: 1.5rem;">～ 未来を拓くイノベーション ～</p>
+                    <p>音楽の力で世界をハッピーにするプロジェクト</p>
+                </div>
+
+                <!-- スライド2 -->
+                <div class="profile-slide">
+                    <h2 class="slide-h2">経営理念</h2>
+                    <div class="slide-grid">
+                        <div>
+                            <h3>価値の創造と社会貢献</h3>
+                            <p>私たちは、テクノロジーの力で人々の生活を豊かにし、持続可能な社会の実現に貢献します。</p>
+                        </div>
+                        <div style="background: #f0fdfa; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">💡</div>
+                    </div>
+                </div>
+
+                <!-- スライド3 -->
+                <div class="profile-slide">
+                    <h2 class="slide-h2">事業内容</h2>
+                    <div class="team-grid" style="margin: 0;">
+                        <div class="member-card" style="padding: 1rem;">
+                            <i class="fa-solid fa-laptop-code" style="font-size: 2rem; color: var(--secondary);"></i>
+                            <h3>システム開発</h3>
+                        </div>
+                        <div class="member-card" style="padding: 1rem;">
+                            <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: var(--secondary);"></i>
+                            <h3>コンサル</h3>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px;">最新の技術を用いて、音楽と人を繋ぐ新しいプラットフォームを作っています。</p>
+                </div>
+                
+                <p style="color: white; text-align: center;">-- 資料の最後です --</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 開発者用ページ -->
     <div id="adminPage" class="page-section">
         <div class="container" style="padding-top: 2rem;">
             <section class="admin-section">
                 <h2><i class="fa-solid fa-lock"></i> 開発者専用エリア</h2>
-                
                 <div id="loginArea">
                     <p>パスワードを入力してください</p>
                     <input type="password" id="adminPass" class="form-control" style="max-width: 250px; margin: 0 auto 1.5rem;" placeholder="パスワード">
                     <br>
                     <button onclick="checkAdminPass()" class="submit-btn" style="font-size: 1rem; padding: 12px 35px;">認証する</button>
                 </div>
-
                 <div id="dataArea" style="display: none;">
                     <h3>📬 届いているリクエスト一覧</h3>
                     <div id="requestList" class="request-list">
@@ -261,10 +320,8 @@
 
     <footer>
         <p>&copy; 2024 おと・タンケン隊！ Project</p>
-        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 10px;">音楽で世界をハッピーに！</p>
     </footer>
 
-    <!-- 送信中・完了モーダル -->
     <div id="thankYouModal" class="modal-overlay">
         <div class="modal-content">
             <div id="modalIcon" style="font-size: 4rem; margin-bottom: 1rem;">✨</div>
@@ -283,11 +340,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'music-discovery-v2';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'music-discovery-v3';
 
         let currentUser = null;
 
-        // --- エラー対策付きのログイン処理 ---
         const initAuth = async (retryCount = 0) => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -296,11 +352,8 @@
                     await signInAnonymously(auth);
                 }
             } catch (e) {
-                console.error("Auth Error", e);
-                // 5回までリトライ (1s, 2s, 4s, 8s, 16sの間隔)
                 if (retryCount < 5) {
-                    const delay = Math.pow(2, retryCount) * 1000;
-                    setTimeout(() => initAuth(retryCount + 1), delay);
+                    setTimeout(() => initAuth(retryCount + 1), Math.pow(2, retryCount) * 1000);
                 }
             }
         };
@@ -308,18 +361,14 @@
 
         onAuthStateChanged(auth, (user) => { currentUser = user; });
 
-        // 画面の切り替え
         window.showPage = (page) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            if(page === 'admin') {
-                document.getElementById('adminPage').classList.add('active');
-            } else {
-                document.getElementById('userPage').classList.add('active');
-            }
+            if(page === 'admin') document.getElementById('adminPage').classList.add('active');
+            else if(page === 'profile') document.getElementById('profilePage').classList.add('active');
+            else document.getElementById('userPage').classList.add('active');
             window.scrollTo(0,0);
         };
 
-        // 指定の場所までスクロール
         window.scrollToSection = (id) => {
             showPage('user');
             setTimeout(() => {
@@ -328,47 +377,33 @@
             }, 100);
         };
 
-        // 管理者認証
         window.checkAdminPass = () => {
             if(document.getElementById('adminPass').value === "takakita") {
                 document.getElementById('loginArea').style.display = 'none';
                 document.getElementById('dataArea').style.display = 'block';
                 startListening();
-            } else {
-                alert("パスワードがちがうよ！");
-            }
+            } else { alert("パスワードがちがうよ！"); }
         };
 
-        // リクエスト送信
         const form = document.getElementById('requestForm');
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) {
-                alert("ログインの準備中だよ。数秒待ってからもう一度押してね！");
-                return;
-            }
-
+            if (!currentUser) return;
             showModal("⌛", "送信中...", "データを送っているよ。");
-            
             const data = {
                 name: document.getElementById('userName').value,
                 topic: document.getElementById('requestTopic').value,
                 message: document.getElementById('userMessage').value,
                 timestamp: serverTimestamp()
             };
-
             try {
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'requests');
                 await addDoc(colRef, data);
                 showModal("✨🎉✨", "リクエスト完了！", "ありがとう！リーダーに届けたよ。");
                 form.reset();
-            } catch (err) {
-                console.error("Save Error", err);
-                showModal("❌", "エラー", "うまく送れなかったみたい...");
-            }
+            } catch (err) { showModal("❌", "エラー", "うまく送れなかったみたい..."); }
         });
 
-        // リアルタイムリスト更新
         function startListening() {
             if (!currentUser) return;
             const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'requests');
@@ -377,25 +412,15 @@
                 listDiv.innerHTML = '';
                 const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                if(docs.length === 0) {
-                    listDiv.innerHTML = '<p>まだリクエストはありません。</p>';
-                    return;
-                }
-
+                if(docs.length === 0) { listDiv.innerHTML = '<p>まだリクエストはありません。</p>'; return; }
                 docs.forEach(data => {
                     const item = document.createElement('div');
                     item.className = 'request-item';
                     const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : '送信中...';
-                    item.innerHTML = `
-                        <div class="date">${date}</div>
-                        <h4>${data.name} さん</h4>
-                        <p><strong>テーマ:</strong> ${data.topic}</p>
-                        <p style="white-space: pre-wrap;">${data.message}</p>
-                    `;
+                    item.innerHTML = `<div class="date">${date}</div><h4>${data.name} さん</h4><p><strong>テーマ:</strong> ${data.topic}</p><p style="white-space: pre-wrap;">${data.message}</p>`;
                     listDiv.appendChild(item);
                 });
-            }, (error) => { console.error("Firestore Listen Error", error); });
+            });
         }
 
         function showModal(icon, title, message) {
@@ -405,9 +430,7 @@
             document.getElementById('thankYouModal').style.display = 'flex';
         }
 
-        window.closeModal = () => {
-            document.getElementById('thankYouModal').style.display = 'none';
-        };
+        window.closeModal = () => { document.getElementById('thankYouModal').style.display = 'none'; };
     </script>
 </body>
 </html>
